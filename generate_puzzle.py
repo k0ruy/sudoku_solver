@@ -1,7 +1,8 @@
 import numpy
+from random import sample
 
 
-def _pattern(b: int, r: int,c: int):
+def _pattern(b: int, r: int, c: int):
     """Generate a valid pattern
 
     Args:
@@ -13,8 +14,8 @@ def _pattern(b: int, r: int,c: int):
         int: a number for a valid pattern
     """
     
-    side = b**2
-    return (b*(r%b)+r//b+c)%side
+    side = b ** 2
+    return (b * (r % b) + r // b + c) % side
 
 
 def _shuffle(s: int):
@@ -27,12 +28,10 @@ def _shuffle(s: int):
         list: the shuffled population
     """
     
-    from random import sample
-    
-    return sample(s, len(s)) 
+    return sample(s, len(s))
 
 
-def generate(base: int = 3):
+def _get_puzzle(base: int):
     """Generate the puzzle to solve
 
     Args:
@@ -46,10 +45,19 @@ def generate(base: int = 3):
 
     # produce board using randomized baseline pattern
     board = numpy.array([[nums[_pattern(base, r, c)] for c in cols] for r in rows])
+    
     return board
 
 
-generate()
+def generate(base: int = 3):
+    side = base ** 2
+    squares = side * side
+    empties = squares * 3 // 4
     
+    board = _get_puzzle(base)
+    
+    for p in sample(range(squares), empties):
+        board[p // side][p % side] = 0
 
+    return board
     
