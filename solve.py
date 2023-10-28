@@ -6,8 +6,6 @@ from functools import wraps
 from time import time
 
 
-
-
 # timer wrapper from https://stackoverflow.com/questions/1622943/timeit-versus-timing-decorator
 def timing(f):
     @wraps(f)
