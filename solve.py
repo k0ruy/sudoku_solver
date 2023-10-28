@@ -5,6 +5,9 @@ import pandas as pd
 from functools import wraps
 from time import time
 
+
+
+
 # timer wrapper from https://stackoverflow.com/questions/1622943/timeit-versus-timing-decorator
 def timing(f):
     @wraps(f)
@@ -13,12 +16,14 @@ def timing(f):
         result = f(*args)
         te = time()
         
-        arr = args[0]
+        arr = np.array(args[0])
         arr = pd.DataFrame(arr)
         arr.columns = ['']*arr.shape[1]
+        
         print('----------------------------')
         print('%r' % arr)
         print('\ntook: %2.4f sec' % (te-ts))
+        
         return result
     return wrap
 
