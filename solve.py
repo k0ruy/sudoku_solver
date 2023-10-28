@@ -1,5 +1,26 @@
 from generate_puzzle import generate
 import numpy as np
+import pandas as pd
+
+from functools import wraps
+from time import time
+
+# timer wrapper from https://stackoverflow.com/questions/1622943/timeit-versus-timing-decorator
+def timing(f):
+    @wraps(f)
+    def wrap(*args):
+        ts = time()
+        result = f(*args)
+        te = time()
+        
+        arr = args[0]
+        arr = pd.DataFrame(arr)
+        arr.columns = ['']*arr.shape[1]
+        print('----------------------------')
+        print('%r' % arr)
+        print('\ntook: %2.4f sec' % (te-ts))
+        return result
+    return wrap
 
 
 def _row_check(row: np.ndarray, val: int):
@@ -75,7 +96,7 @@ def _valid(grid: np.ndarray, val: int, cell: tuple):
         
     return True
 
-
+@timing
 def solve(grid: np.ndarray):
     """Solve the sudoku using backtracking
 
@@ -105,8 +126,4 @@ def solve(grid: np.ndarray):
 if __name__ == "__main__":
     
     sudoku = generate()
-
-    print(sudoku)
     solve(sudoku)
-    print("-----------------------------")
-    print(sudoku)
