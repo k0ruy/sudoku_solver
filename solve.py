@@ -2,56 +2,96 @@ from generate_puzzle import generate
 import numpy as np
 
 
-sudoku = generate()
+def _row_check(row: np.ndarray, val: int):
+    """Helper function to check the specific row
 
+    Args:
+        row (np.ndarray): the row to check
+        val (int): the value to check
 
-def row_check(row, val):
+    Returns:
+        bool: is the value valid in that spot
+    """
     if val in row:
         return False
     return True
 
 
-def col_check(col, val):
+def _col_check(col: np.ndarray, val: int):
+    """Helper function to check the specific column
+
+    Args:
+        col (np.ndarray): the column to check
+        val (int): the value to check
+
+    Returns:
+        bool: is the value valid in that spot
+    """
     if val in col:
         return False
     return True
     
 
 
-def box_check(box, val):
+def _box_check(box: np.ndarray, val: int):
+    """Helper function to check the specific box
+
+    Args:
+        box (np.ndarray): the box to check
+        val (int): the value to check
+
+    Returns:
+        bool: is the value valid in that spot
+    """
     if val in box:
         return False
     return True
 
 
-def valid(grid: np.ndarray, val: int, cell: tuple):
+def _valid(grid: np.ndarray, val: int, cell: tuple):
+    """Check if a value is valid to put in a specific cell
+
+    Args:
+        grid (np.ndarray): _description_
+        val (int): _description_
+        cell (tuple): _description_
+
+    Returns:
+        bool: whether the value is valid to put in that specific cell
+    """
     row = grid[cell[0]]
-    if not row_check(row, val):
+    if not _row_check(row, val):
         return False
     
     col = grid.T[cell[1]]
-    if not col_check(col, val):
+    if not _col_check(col, val):
         return False
     
     x = cell[0]//3*3
     y = cell[1]//3*3
     box = grid[x: x + 3, y: y + 3]
-    if not box_check(box, val):
+    if not _box_check(box, val):
         return False
         
     return True
 
 
-def solve(grid):
+def solve(grid: np.ndarray):
+    """Solve the sudoku using backtracking
+
+    Args:
+        grid (np.ndarray): the uncompleted puzzle to solve
+
+    Returns:
+        np.ndarray: the solved puzzle
+    """
     if 0 not in grid:
         return True
     
     unfilled = list(zip(*np.where(grid == 0)))[0]
     
-    # print(grid[unfilled[0]])
-    # return
     for num in range(1, 10):
-        if valid(grid, num, unfilled):
+        if _valid(grid, num, unfilled):
             grid[unfilled] = num
 
             if solve(grid):
@@ -62,22 +102,9 @@ def solve(grid):
     return False
 
 
-# def print_board(bo):
-#     for i in range(len(bo)):
-#         if i % 3 == 0 and i != 0:
-#             print("- - - - - - - - - - - - - ")
-
-#         for j in range(len(bo[0])):
-#             if j % 3 == 0 and j != 0:
-#                 print(" | ", end="")
-
-#             if j == 8:
-#                 print(bo[i][j])
-#             else:
-#                 print(str(bo[i][j]) + " ", end="")
-
-                
 if __name__ == "__main__":
+    
+    sudoku = generate()
 
     print(sudoku)
     solve(sudoku)
