@@ -1,18 +1,55 @@
-base  = 3
-side  = base*base
+import numpy
 
-# pattern for a baseline valid solution
-def pattern(r,c): return (base*(r%base)+r//base+c)%side
 
-# randomize rows, columns and numbers (of valid base pattern)
-from random import sample
-def shuffle(s): return sample(s,len(s)) 
-rBase = range(base) 
-rows  = [ g*base + r for g in shuffle(rBase) for r in shuffle(rBase) ] 
-cols  = [ g*base + c for g in shuffle(rBase) for c in shuffle(rBase) ]
-nums  = shuffle(range(1,base*base+1))
+def _pattern(b: int, r: int,c: int):
+    """Generate a valid pattern
 
-# produce board using randomized baseline pattern
-board = [ [nums[pattern(r,c)] for c in cols] for r in rows ]
+    Args:
+        b (int): base
+        r (int): rows
+        c (int): columns
 
-for line in board: print(line)
+    Returns:
+        int: a number for a valid pattern
+    """
+    
+    side = b**2
+    return (b*(r%b)+r//b+c)%side
+
+
+def _shuffle(s: int):
+    """Randomize rows, columns and numbers
+
+    Args:
+        s (list): the population to shuffle
+
+    Returns:
+        list: the shuffled population
+    """
+    
+    from random import sample
+    
+    return sample(s, len(s)) 
+
+
+def generate(base: int = 3):
+    """Generate the puzzle to solve
+
+    Args:
+        base (int): in which base should the puzzle be generated (e.g. 3 for a 9x9 sudoku)
+    """
+    
+    rBase = range(base)
+    rows  = [g*base + r for g in _shuffle(rBase) for r in _shuffle(rBase)]
+    cols  = [g*base + c for g in _shuffle(rBase) for c in _shuffle(rBase)]
+    nums  = _shuffle(range(1, base**2 + 1))
+
+    # produce board using randomized baseline pattern
+    board = numpy.array([[nums[_pattern(base, r, c)] for c in cols] for r in rows])
+    return board
+
+
+generate()
+    
+
+    
