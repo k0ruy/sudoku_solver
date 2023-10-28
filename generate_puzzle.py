@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from random import sample
 
 
@@ -44,7 +44,7 @@ def _get_puzzle(base: int):
     nums  = _shuffle(range(1, base**2 + 1))
 
     # produce board using randomized baseline pattern
-    board = numpy.array([[nums[_pattern(base, r, c)] for c in cols] for r in rows])
+    board = np.array([[nums[_pattern(base, r, c)] for c in cols] for r in rows])
     
     return board
 
