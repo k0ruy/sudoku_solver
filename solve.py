@@ -17,6 +17,7 @@ def timing(f):
         arr = np.array(args[0])
         arr = pd.DataFrame(arr)
         arr.columns = ['']*arr.shape[1]
+        arr.index = ['']*arr.shape[1]
         
         print('----------------------------')
         print('%r' % arr)
@@ -76,9 +77,9 @@ def _valid(grid: np.ndarray, val: int, cell: tuple):
     """Check if a value is valid to put in a specific cell
 
     Args:
-        grid (np.ndarray): _description_
-        val (int): _description_
-        cell (tuple): _description_
+        grid (np.ndarray): the sudoku board to complete
+        val (int): the value to put in the cell
+        cell (tuple): the specific cell in which we want to put the value
 
     Returns:
         bool: whether the value is valid to put in that specific cell
@@ -113,20 +114,23 @@ def solve(grid: np.ndarray):
         return True
     
     unfilled = list(zip(*np.where(grid == 0)))[0]
+    # print(unfilled)
     
     for num in range(1, 10):
         if _valid(grid, num, unfilled):
             grid[unfilled] = num
 
+            # if all the cells are complete and valid the solve function will return True
             if solve(grid):
                 return True
 
             grid[unfilled] = 0
-            
+    
     return False
 
 
 if __name__ == "__main__":
     
-    sudoku = generate()
+    sudoku = generate(3)
+    print(sudoku)
     solve(sudoku)
